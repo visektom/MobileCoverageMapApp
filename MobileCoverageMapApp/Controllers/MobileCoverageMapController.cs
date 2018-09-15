@@ -65,7 +65,7 @@ namespace MobileCoverageMapApp.Controllers
 
         public MobileCoverageMapAppViewModel ImportFromCSV(string telcoOperator)
         {
-            string filePath = @"c:\Users\tomas\Downloads\pokryti-dalnic-mobilnim-signalem-d0.csv";
+            string filePath = @"c:\Users\tomas\Documents\Visual Studio 2017\Projects\MobileCoverageMapApp\MobileCoverageMapApp\App_Data\pokryti-dalnic-mobilnim-signalem-d0.csv";
             MobileCoverageMapAppViewModel model = new MobileCoverageMapAppViewModel();
             model.Measurements = new List<Measurement>();
 
@@ -113,64 +113,6 @@ namespace MobileCoverageMapApp.Controllers
             }
 
             return model;
-        }
-
-        public MobileCoverageMapAppViewModel ImportFromCSV2(string telcoOperator)
-        {
-            string filePath = @"c:\Users\tomas\Downloads\pokryti-dalnic-mobilnim-signalem-d0.csv";
-            MobileCoverageMapAppViewModel model = new MobileCoverageMapAppViewModel();
-            model.Measurements = new List<Measurement>();
-
-            using (var reader = new StreamReader(filePath))
-            {
-                string firstLine = reader.ReadLine();
-                string[] headers = firstLine.Split(';');
-
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-                    string[] values = line.Split(';');
-
-                    bool timeParseSuccess = DateTime.TryParse(values[0], out DateTime time);
-                    bool latParseSuccess = float.TryParse(values[1], out float lat);
-                    bool lngParseSuccess = float.TryParse(values[2], out float lng);
-                    bool RSRPParseSuccess;
-                    float RSRP;
-
-                    switch (telcoOperator)
-                    {
-                        case "O2":
-                            RSRPParseSuccess = float.TryParse(values[5], out RSRP);
-                            break;
-                        case "T-Mobile":
-                            RSRPParseSuccess = float.TryParse(values[3], out RSRP);
-                            break;
-                        case "Vodafone":
-                            RSRPParseSuccess = float.TryParse(values[7], out RSRP);
-                            break;
-                        default:
-                            RSRP = default(float);
-                            break;
-                    }
-
-                    model.Measurements.Add(new Measurement
-                    {
-                        Time = time,
-                        Lat = lat,
-                        Lng = lng,
-                        RSRP = RSRP
-                    });
-                }
-            }
-
-            return model;
-        }
-
-        public JsonResult GetHeatMapData()
-        {
-
-
-            return Json("", JsonRequestBehavior.AllowGet);
         }
     }
 }
