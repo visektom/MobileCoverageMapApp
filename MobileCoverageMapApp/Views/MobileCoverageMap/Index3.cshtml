@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info Windows</title>
+    <style>
+         /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+         #map {
+             height: 100%;
+         }
+         /* Optional: Makes the sample page fill the window. */
+         html, body {
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+
+      function initMap() {
+        var cz = { lat: 49.823877, lng: 15.045518, time: new Date(2018, 09, 15), RSRP: -67.94 };
+
+          var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: cz
+        });
+
+        var contentString = '<div id="content">'+
+            '<h1 id="firstHeading" class="firstHeading">'+ cz.lat + ', ' + cz.lng + '</h1>'+
+            '<b>RSRP:</b><br \>' + cz.RSRP + 
+            '</div>';
+
+          //'<b>Time:</b><br \>' + Date.parse(cz.time, 'yyyy-MM-ddTHH:mm:ss.fff') + '<br \><br \>' +
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+          position: cz,
+          map: map,
+          title: 'Czech Republic'
+          });
+
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        }
+
+
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHE_B2mcl4H1mLbSJWsk_n3cjiG4TObK8&callback=initMap">
+    </script>
+</body>
+</html>
