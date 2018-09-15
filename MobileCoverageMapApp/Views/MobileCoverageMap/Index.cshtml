@@ -46,6 +46,8 @@
             var marker;
             var markers = [];
             var infoWindow;
+            var toogle = false;
+            var handlersAdded = false;
             var pos0 = { lat: 49.823877, lng: 15.045518 };
             var pos1 = { lat: 49.979177, lng: 14.600468 };
             var pos2 = { lat: 49.979078, lng: 14.600212 };
@@ -53,41 +55,81 @@
             function initMap() {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: pos2,
-                    zoom: 7
+                    zoom: 11
                 });
             }
 
-            $('#o2Button').on('click', function (e) {
-                var telcoOperator = $(this);
+            if (!handlersAdded) {
+                handlersAdded = true;
 
-                $.ajax({
-                    type: "POST",
-                    url: "/MobileCoverageMap/GetData",
-                    data: telcoOperator,
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {
-                        for (var i = 0; i < data.Measurements.length; i++) {
-                            addMarker(data.Measurements[i]);
+                $('#o2Button').on('click', function (e) {
+                    var telcoOperator = $(this);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/MobileCoverageMap/GetData",
+                        data: telcoOperator,
+                        dataType: "json",
+                        success: function (data, textStatus, jqXHR) {
+                            for (var i = 0; i < data.Measurements.length; i++) {
+                                addMarker(data.Measurements[i]);
+                            }
+
+                            toogle == false ? toogle = true : toogle = false;
+                            toogle == false ? hideMarkers() : showMarkers();
                         }
-                        showMarkers();
-                    }
+                    });
                 });
 
-            });
+                $('#tmobileButton').on('click', function (e) {
+                    var telcoOperator = $(this);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/MobileCoverageMap/GetData",
+                        data: telcoOperator,
+                        dataType: "json",
+                        success: function (data, textStatus, jqXHR) {
+                            for (var i = 0; i < data.Measurements.length; i++) {
+                                addMarker(data.Measurements[i]);
+                            }
+
+                            toogle == false ? toogle = true : toogle = false;
+                            toogle == false ? hideMarkers() : showMarkers();
+                        }
+                    });
+                });
+
+                $('#vodafoneButton').on('click', function (e) {
+                    var telcoOperator = $(this);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/MobileCoverageMap/GetData",
+                        data: telcoOperator,
+                        dataType: "json",
+                        success: function (data, textStatus, jqXHR) {
+                            for (var i = 0; i < data.Measurements.length; i++) {
+                                addMarker(data.Measurements[i]);
+                            }
+
+                            toogle == false ? toogle = true : toogle = false;
+                            toogle == false ? hideMarkers() : showMarkers();
+                        }
+                    });
+                });
+            }
 
             function addMarker(data) {
                 var location = { lat: data.Lat, lng: data.Lng };
                 var time = data.Time;
                 var title = data.RSRP;
+                var contentString = data.contentString;
 
-                var contentString = '<div id="content">' +
-                    '<h2 id="firstHeading" class="firstHeading">' + data.Lat + ', ' + data.Lng + '</h2>' +
-                    '<b>RSRP:</b><br \>' + data.RSRP +
-                    '</div>';
-
-                infoWindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
+                //var contentString = '<div id="content">' +
+                //    '<h2 id="firstHeading" class="firstHeading">' + data.Lat + ', ' + data.Lng + '</h2>' +
+                //    '<b>RSRP:</b><br \>' + data.RSRP +
+                //    '</div>';
 
                 marker = new google.maps.Marker({
                     position: location,
@@ -95,15 +137,7 @@
                     title: title
                 });
 
-                marker.addListener('click', function (e) {
-                    infoWindow.open(map, marker);
-                });
-
                 markers.push(marker);
-            }
-
-            function addInfoWindow() {
-
             }
 
             function showMarkers() {
@@ -113,11 +147,10 @@
             }
 
             function hideMarkers() {
-
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
             }
-
-
-
         </script>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHE_B2mcl4H1mLbSJWsk_n3cjiG4TObK8&callback=initMap"

@@ -18,6 +18,11 @@ namespace MobileCoverageMapApp.Controllers
             return View();
         }
 
+        public ActionResult Index1()
+        {
+            return View();
+        }
+
         public ActionResult Index2()
         {
             return View();
@@ -29,6 +34,11 @@ namespace MobileCoverageMapApp.Controllers
         }
 
         public ActionResult Index4()
+        {
+            return View();
+        }
+
+        public ActionResult Index5()
         {
             return View();
         }
@@ -79,6 +89,7 @@ namespace MobileCoverageMapApp.Controllers
                     {
                         case "O2":
                             RSRPParseSuccess = float.TryParse(values[5], out RSRP);
+
                             break;
                         case "T-Mobile":
                             RSRPParseSuccess = float.TryParse(values[3], out RSRP);
@@ -95,7 +106,8 @@ namespace MobileCoverageMapApp.Controllers
                         Time = time,
                         Lat = lat,
                         Lng = lng,
-                        RSRP = RSRP
+                        RSRP = RSRP,
+                        ContentString = lat.ToString() + ", " + lng.ToString() + "<br \\>" + "<b>RSRP: </b>" + RSRP.ToString()
                     });
                 }
             }
